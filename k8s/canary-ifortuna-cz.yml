@@ -58,6 +58,11 @@ spec:
                 configMapKeyRef:
                   name: canary-config
                   key: wait.for.timeout
+            - name: ATTACHMENTS
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: attachmets
             - name: BASE_URL
               value: "https://www.ifortuna.cz"
             - name: AT_DRIVER_HOST_NAME
@@ -102,6 +107,26 @@ spec:
                 configMapKeyRef:
                   name: canary-services
                   key: memory.intercept
+            - name: AWS_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-aws
+                  key: aws.s3.access.key
+            - name: AWS_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: secret-aws
+                  key: aws.s3.secret.key
+            - name: AWS_S3_REGION
+              valueFrom:
+                secretKeyRef:
+                  name: secret-aws
+                  key: aws.s3.region
+            - name: AWS_S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: secret-aws
+                  key: aws.s3.bucket
             resources:
               requests:
                 memory: "300Mi"

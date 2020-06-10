@@ -10,6 +10,7 @@ data:
   git.host: github.com
   git.port: "22"
   wait.for.timeout: "60000"
+  attachmets: "allow"
 ---
 apiVersion: v1
 kind: ConfigMap

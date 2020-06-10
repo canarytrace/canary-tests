@@ -1,0 +1,160 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: canary-documentation
+spec:
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 2
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: canary
+            image: rdpanek/canarytrace:c.2.9.7
+            env:
+            - name: USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret-user
+                  key: username
+            - name: PASS
+              valueFrom:
+                secretKeyRef:
+                  name: secret-user
+                  key: password
+            - name: GIT_REPOSITORY
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: git.repository
+            - name: GIT_REPOSITORY_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: git.host
+            - name: GIT_REPOSITORY_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: git.port
+            - name: GIT_REVISION
+              value: "5b2540d"
+            - name: SPEC
+              value: "canary/documentation-smoke.js"
+            - name: ELASTIC_CLUSTER
+              valueFrom:
+                  secretKeyRef:
+                    name: secret-elastic
+                    key: cluster
+            - name: ELASTIC_HTTP_AUTH
+              valueFrom:
+                  secretKeyRef:
+                    name: secret-elastic
+                    key: http.auth
+            - name: WAIT_FOR_TIMEOUT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: wait.for.timeout
+            - name: BASE_URL
+              value: "https://github.com/"
+            - name: AT_DRIVER_HOST_NAME
+              value: "localhost"
+            - name: LOG_LEVEL
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: log.level
+            - name: ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-config
+                  key: env
+            - name: PT_AUDIT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: pt.audit
+            - name: COVERAGE_AUDIT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: coverage.audit
+            - name: RESPONSE_INTERCEPT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: response.intercept
+            - name: REQUEST_INTERCEPT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: request.intercept
+            - name: CONSOLE_INTERCEPT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: console.intercept
+            - name: MEMORY_INTERCEPT
+              valueFrom:
+                configMapKeyRef:
+                  name: canary-services
+                  key: memory.intercept
+            resources:
+              requests:
+                memory: "300Mi"
+                cpu: "200m"
+              limits:
+                memory: "400Mi"
+                cpu: "300m"
+            imagePullPolicy: "Always"
+            volumeMounts:
+              - mountPath: /secret
+                name: secret-github
+                readOnly: true
+          - name: selenium
+            image: selenium/standalone-chrome:3.141.59-titanium
+            ports:
+              - containerPort: 5900
+              - containerPort: 4444
+            resources:
+              requests:
+                memory: "1000Mi"
+                cpu: "600m"
+              limits:
+                memory: "1200Mi"
+                cpu: "700m"
+            imagePullPolicy: "IfNotPresent"
+            volumeMounts:
+              - mountPath: "/dev/shm"
+                name: "dshm"
+            livenessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
+            readinessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
+          restartPolicy: "Never"
+          volumes:
+            - name: secret-github
+              secret:
+                secretName: secret-github
+            - name: secret-elastic
+              secret:
+                secretName: secret-elastic
+            - name: secret-user
+              secret:
+                secretName: secret-user
+            - name: "dshm"
+              emptyDir:
+                medium: "Memory"
+          imagePullSecrets:
+            - name: regcred

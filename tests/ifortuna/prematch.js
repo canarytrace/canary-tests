@@ -13,7 +13,7 @@ describe('Fortuna Prematch', () => {
         browser.url('/')
         const titleElm = $(`//title[contains(text(),"${title}")]`)
         browser.waitForloadEventEnd()
-        expect(titleElm.waitForExist(undefined, false, "Element title not found. The page couldn't be loaded in time.")).to.be.true
+        expect(titleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
         browser.TakeCoverage('fortuna')
         browser.EvaluatePerformanceAudit()
       });
@@ -26,7 +26,7 @@ describe('Fortuna Prematch', () => {
 
         const prematchTitleElm = $('//title[contains(text(),"Kurzové sázení online | Fortuna")]')
         browser.waitForloadEventEnd()
-        expect(prematchTitleElm.waitForExist(undefined, false, "Element title not found. The page couldn't be loaded in time.")).to.be.true
+        expect(prematchTitleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
         browser.EvaluatePerformanceAudit()
       });
   });

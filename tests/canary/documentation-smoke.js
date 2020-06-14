@@ -12,7 +12,7 @@ describe('Canarytrace documentation smoke', () => {
         browser.url('/canarytrace/canarytrace-documentation/blob/master/README.md')
         const titleElm = $(`//title[contains(text(),"${title}")]`)
         browser.waitForloadEventEnd()
-        expect(titleElm.waitForExist(undefined, false, "Element title not found. The page couldn't be loaded in time.")).to.be.true
+        expect(titleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
         browser.TakeCoverage('github')
         browser.EvaluatePerformanceAudit()
       });

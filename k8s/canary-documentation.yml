@@ -5,14 +5,14 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
-  schedule: "*/2 * * * *"
+  schedule: "*/3 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.9
+            image: rdpanek/canarytrace:c.2.9.10
             env:
             - name: USER
               valueFrom:

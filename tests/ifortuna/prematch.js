@@ -24,14 +24,22 @@ describe('Fortuna Prematch', () => {
         const elmPrematch = $('//a[@href="/sazeni"][contains(string(),"Sporty")]')
         elmPrematch.click()
 
-        const prematchTitleElm = $('//title[contains(text(),"Kurzové sázení online | Fortuna")]')
+        // random bug
+        let prematchTitleElm
+        if (Math.random() >= 0.5) {
+          prematchTitleElm = $('//title[contains(text(),"Kurzové sázení online | Fortuna")]')
+        } else {
+          prematchTitleElm = $(
+            '//title[contains(text(),"Kurzové sázení online chyba | Fortuna")]'
+          )
+        }
+
         browser.waitForloadEventEnd()
         expect(prematchTitleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
-        browser.EvaluatePerformanceAudit()
       });
   });
 
-  after(() => {
+  afterEach(() => {
     if (process.env.PT_AUDIT == 'allow') {
       browser.disablePerformanceAudits()
     }

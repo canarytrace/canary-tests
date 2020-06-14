@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.7
+            image: rdpanek/canarytrace:c.2.9.9
             env:
             - name: USER
               valueFrom:
@@ -40,7 +40,7 @@ spec:
                   name: canary-config
                   key: git.port
             - name: GIT_REVISION
-              value: "b9171c0"
+              value: "2f5534e"
             - name: SPEC
               value: "ifortuna/prematch.js"
             - name: ELASTIC_CLUSTER

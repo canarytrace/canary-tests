@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.10
+            image: rdpanek/canarytrace:c.2.9.18
             env:
             - name: USER
               valueFrom:
@@ -42,7 +42,7 @@ spec:
             - name: GIT_REVISION
               value: "5d1bfdb"
             - name: SPEC
-              value: "ifortuna/prematch.js"
+              value: "tests/ifortuna/prematch.js"
             - name: ELASTIC_CLUSTER
               valueFrom:
                   secretKeyRef:

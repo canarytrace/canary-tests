@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.21
+            image: rdpanek/canarytrace:c.2.9.22
             env:
             - name: USER
               valueFrom:

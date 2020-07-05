@@ -5,14 +5,14 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
-  schedule: "*/2 * * * *"
+  schedule: "*/3 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.10
+            image: rdpanek/canarytrace:c.2.9.22
             env:
             - name: USER
               valueFrom:
@@ -42,7 +42,7 @@ spec:
             - name: GIT_REVISION
               value: "f1346b9"
             - name: SPEC
-              value: "ifortuna/prematch.js"
+              value: "tests/ifortuna/prematch.js"
             - name: ELASTIC_CLUSTER
               valueFrom:
                   secretKeyRef:

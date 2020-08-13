@@ -40,7 +40,7 @@ spec:
                   name: canary-config
                   key: git.port
             - name: GIT_REVISION
-              value: "aaa9d40"
+              value: "deb93ad"
             - name: SPEC
               value: "tesla/smoke.js"
             - name: ELASTIC_CLUSTER
@@ -145,7 +145,7 @@ spec:
                 name: secret-github
                 readOnly: true
           - name: selenium
-            image: selenium/standalone-chrome:3.141.59-titanium
+            image: selenium/standalone-chrome-debug:3.141.59-20200730
             ports:
               - containerPort: 5900
               - containerPort: 4444

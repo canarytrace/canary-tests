@@ -5,14 +5,14 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
-  schedule: "*/3 * * * *"
+  schedule: "*/2 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.31
+            image: rdpanek/canarytrace:c.2.9.37
             env:
             - name: USER
               valueFrom:
@@ -112,6 +112,8 @@ spec:
                 configMapKeyRef:
                   name: canary-services
                   key: performance.entries.intercept
+            - name: HERO_ELEMENTS
+              value: "allow"
             - name: AWS_S3_ACCESS_KEY
               valueFrom:
                 secretKeyRef:

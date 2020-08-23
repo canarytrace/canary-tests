@@ -1,12 +1,12 @@
 describe('Smoke monitoring on tesla.com', () => {
 
-before(() => {
-  if (process.env.PT_AUDIT == 'allow') {
-    browser.enablePerformanceAudits({
-      networkThrottling: 'online'
-    })
-  }
-})
+  before(() => {
+    if (process.env.PT_AUDIT == 'allow') {
+      browser.enablePerformanceAudits({
+        networkThrottling: 'online'
+      })
+    }
+  })
 
   describe('HomePage', () => {
     it('inject hero element measurement', function () {
@@ -43,6 +43,26 @@ before(() => {
       browser.EvaluatePerformanceAudit()
       expect(titleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
       browser.TakeCoverage('tesla')
+    });
+
+    // example save object to elasticsearch
+    it('save clients to elasticsearch', () => {
+      let settings = {
+        payload: {
+          'firstname': 'Radim',
+          'secondname': 'Daniel',
+          'surname': 'Panek',
+          'isSDET': true, 
+          'clientsID': Math.floor(Math.random() * 100)
+        }, 
+        indexName: 'clients',
+      }
+      browser.SaveToElastic(settings)
+    });
+
+    // example use additional configuration
+    it('test config', () => {
+      console.log(browser.config.secretKey)
     });
   });
 })

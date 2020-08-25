@@ -5,15 +5,23 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
-  schedule: "*/2 * * * *"
+  schedule: "*/3 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.9.37
+            image: rdpanek/canarytrace:c.2.10.0
             env:
+            - name: GIT_REVISION
+              value: "deb93ad"
+            - name: SPEC
+              value: "tesla/smoke.js"
+            - name: BASE_URL
+              value: "https://www.tesla.com/"
+            - name: ENV_PRINT
+              value: allow
             - name: USER
               valueFrom:
                 secretKeyRef:
@@ -39,10 +47,6 @@ spec:
                 configMapKeyRef:
                   name: canary-config
                   key: git.port
-            - name: GIT_REVISION
-              value: "deb93ad"
-            - name: SPEC
-              value: "tesla/smoke.js"
             - name: ELASTIC_CLUSTER
               valueFrom:
                   secretKeyRef:
@@ -63,8 +67,6 @@ spec:
                 configMapKeyRef:
                   name: canary-config
                   key: attachmets
-            - name: BASE_URL
-              value: "https://www.tesla.com/"
             - name: AT_DRIVER_HOST_NAME
               value: "localhost"
             - name: LOG_LEVEL

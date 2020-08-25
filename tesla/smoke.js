@@ -37,7 +37,16 @@ describe('Smoke monitoring on tesla.com', () => {
     it('open', () => {
       browser.CoverageStart()
       browser.url('https://www.tesla.com/')
-      const title = 'Electric Cars, Solar & Clean Energy | Tesla'
+
+      // random bug
+      let title = ''
+      if (Math.random() >= 0.5) {
+        title = 'Electric Cars, Solar & Clean Energy | Tesla2'
+      } else {
+        title = 'Electric Cars, Solar & Clean Energy | Tesla'
+      }
+
+
       const titleElm = $(`//title[contains(text(),"${title}")]`)
       browser.waitForloadEventEnd()
       browser.EvaluatePerformanceAudit()
@@ -56,6 +65,8 @@ describe('Smoke monitoring on tesla.com', () => {
           'clientsID': Math.floor(Math.random() * 100)
         }, 
         indexName: 'clients',
+        injectEnv: true,
+        injectTimestamp: true
       }
       browser.SaveToElastic(settings)
     });

@@ -12,10 +12,10 @@ spec:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.10.0
+            image: rdpanek/canarytrace:c.2.12.1
             env:
             - name: GIT_REVISION
-              value: "deb93ad"
+              value: "43d1692"
             - name: SPEC
               value: "tesla/smoke.js"
             - name: BASE_URL

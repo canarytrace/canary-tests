@@ -43,11 +43,11 @@ describe('Smoke monitoring on tesla.com', () => {
     });
 
     it('select and open model X', () => {
-      const modelXElm = $('(//a[@href="/cs_cz/modelx"])[1]')
+      const modelXElm = $('(//a[@href="/modelx"])[1]')
       modelXElm.waitForExist()
       modelXElm.click()
 
-      const titleXElm = $('//title[contains(text(),"Model X | Tesla Česko")]')
+      const titleXElm = $('//title[contains(text(),"Model X | Tesla")]')
       titleXElm.waitForExist()
     });
     

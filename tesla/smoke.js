@@ -42,16 +42,6 @@ describe('Smoke monitoring on tesla.com', () => {
       browser.TakeCoverage('tesla')
     });
 
-    it('select region Cesko', () => {
-      const dialogElm = $('//dialog[@aria-hidden="false"]')
-
-      const countryElm = $('//a[contains(@class,"region-link")][contains(text(),"Česko")]')
-      countryElm.waitForExist()
-      countryElm.click()
-
-      dialogElm.waitForExist({reverse: true})
-    });
-
     it('select and open model X', () => {
       const modelXElm = $('(//a[@href="/cs_cz/modelx"])[1]')
       modelXElm.waitForExist()

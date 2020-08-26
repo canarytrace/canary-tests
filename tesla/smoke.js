@@ -1,11 +1,9 @@
 describe('Smoke monitoring on tesla.com', () => {
 
   before(() => {
-    if (process.env.PT_AUDIT == 'allow') {
-      browser.enablePerformanceAudits({
-        networkThrottling: 'online'
-      })
-    }
+    browser.ActivatePerformanceAudit({
+      networkThrottling: 'online'
+    })
   })
 
   describe('HomePage', () => {

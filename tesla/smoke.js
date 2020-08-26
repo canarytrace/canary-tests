@@ -6,7 +6,7 @@ describe('Smoke monitoring on tesla.com', () => {
     })
   })
 
-  describe('HomePage', () => {
+  describe('Buy a MODEL X', () => {
     it('inject hero element measurement', function () {
 
       // configuration
@@ -21,11 +21,10 @@ describe('Smoke monitoring on tesla.com', () => {
       // rules
       const rules = [
         ['<head>', '<script>performance.mark(\'HE-start-head\')</script>\n<head>'],
-        ['</head>', '<head>\n<script>performance.mark(\'HE-stop-head\')</script>'],
+        ['</head>', '</head>\n<script>performance.mark(\'HE-stop-head\')</script>'],
         ['<body', '<script>performance.mark(\'HE-start-body\')</script><body'],
-        ['</body>', '</body>\n<script>performance.mark(\'HE-stop-body\')</script>'],
-        ['<dialog id="locale-modal"', '<script>performance.mark(\'HE-start-dialog\')</script>\n<dialog id="locale-modal"'],
-        ['</dialog>', '<script>performance.mark(\'HE-stop-dialog\')</script>\n</dialog>'],
+        ['</html>', '<script>performance.mark(\'HE-stop-body\')</script>\n</html>']
+        
       ]
     
       browser.InjectHeroElements(configuration, rules)
@@ -43,6 +42,29 @@ describe('Smoke monitoring on tesla.com', () => {
       browser.TakeCoverage('tesla')
     });
 
+    it('select region Cesko', () => {
+      const dialogElm = $('//dialog[@aria-hidden="false"]')
+      dialogElm.waitForExist()
+
+      const countryElm = $('//a[contains(@class,"region-link")][contains(text(),"Česko")]')
+      countryElm.waitForExist()
+      countryElm.click()
+
+      dialogElm.waitForExist({reverse: true})
+    });
+
+    it('select and open model X', () => {
+      const modelXElm = $('(//a[@href="/cs_cz/modelx"])[1]')
+      modelXElm.waitForExist()
+      modelXElm.click()
+
+      const titleXElm = $('//title[contains(text(),"Model X | Tesla Česko")]')
+      titleXElm.waitForExist()
+    });
+    
+  });
+
+  describe('examples', () => {
     // example save object to elasticsearch
     it('save clients to elasticsearch', () => {
       let settings = {
@@ -54,6 +76,34 @@ describe('Smoke monitoring on tesla.com', () => {
           'clientsID': Math.floor(Math.random() * 100)
         }, 
         indexName: 'clients',
+      }
+      browser.SaveToElastic(settings)
+    });
+
+    it('save memory', () => {
+      const memory = browser.execute(() => {
+        return performance.memory
+      })
+      let settings = {
+        payload: memory, 
+        indexName: 'memory-demo',
+      }
+      browser.SaveToElastic(settings)
+    });
+
+    it('save tesla showcase sections', () => {
+      const sectionsList = browser.execute(() => {
+        return document.querySelectorAll('section.feature')
+      })
+
+      let d = new Date();
+      let datestringIndex = d.getFullYear() + "." + ("0"+(d.getMonth()+1)).slice(-2) + "." + ("0" + d.getDate()).slice(-2);
+
+      let settings = {
+        payload: {
+          sections: sectionsList.length
+        }, 
+        indexName: `tesla-sections-${datestringIndex}`,
       }
       browser.SaveToElastic(settings)
     });

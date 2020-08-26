@@ -44,7 +44,6 @@ describe('Smoke monitoring on tesla.com', () => {
 
     it('select region Cesko', () => {
       const dialogElm = $('//dialog[@aria-hidden="false"]')
-      dialogElm.waitForExist()
 
       const countryElm = $('//a[contains(@class,"region-link")][contains(text(),"Česko")]')
       countryElm.waitForExist()

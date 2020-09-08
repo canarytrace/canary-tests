@@ -15,7 +15,7 @@ spec:
             image: rdpanek/canarytrace:c.2.12.1
             env:
             - name: GIT_REVISION
-              value: "43d1692"
+              value: "4a7f652"
             - name: SPEC
               value: "tesla/smoke.js"
             - name: BASE_URL

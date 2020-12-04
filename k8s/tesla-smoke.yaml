@@ -1,0 +1,83 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: tesla-smoke
+spec:
+  concurrencyPolicy: Replace
+  failedJobsHistoryLimit: 2
+  schedule: "*/2 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: canary
+            image: quay.io/canarytrace/smoke-pro:2.15.6
+            env:
+            - name: BASE_URL
+              value: "https://www.tesla.com/;https://www.tesla.com/modelx"
+            - name: ELASTIC_CLUSTER
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-stack
+                  key: elastic.endpoint
+            - name: ELASTIC_HTTP_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: elastic-stack
+                  key: elastic.http.auth
+            - name: WAIT_FOR_TIMEOUT
+              value: "60000"
+            - name: AT_DRIVER_HOST_NAME
+              value: "localhost"
+            - name: PT_AUDIT
+              value: "allow"
+            - name: PT_AUDIT_THROTTLING
+              value: "desktopDense4G"
+            - name: INDEX_PREFIX
+              value: "dev."
+            resources:
+              requests:
+                memory: "300Mi"
+                cpu: "200m"
+              limits:
+                memory: "400Mi"
+                cpu: "300m"
+            imagePullPolicy: "Always"
+          - name: selenium
+            image: selenium/standalone-chrome:3.141.59-20200730
+            ports:
+              - containerPort: 4444
+            resources:
+              requests:
+                memory: "1000Mi"
+                cpu: "600m"
+              limits:
+                memory: "2000Mi"
+                cpu: "700m"
+            imagePullPolicy: "IfNotPresent"
+            volumeMounts:
+              - mountPath: "/dev/shm"
+                name: "dshm"
+            livenessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
+            readinessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
+          restartPolicy: "Never"
+          volumes:
+            - name: "dshm"
+              emptyDir:
+                medium: "Memory"
+            - name: elastic-stack
+              secret:
+                secretName: elastic-stack
+          imagePullSecrets:
+            - name: canarytrace-labs-pull-secret

@@ -1,7 +1,7 @@
 apiVersion: batch/v1beta1
 kind: CronJob
 metadata:
-  name: tesla
+  name: tesla-professional
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
@@ -12,7 +12,7 @@ spec:
         spec:
           containers:
           - name: canary
-            image: rdpanek/canarytrace:c.2.12.1
+            image: quay.io/canarytrace/professional:2.15.6
             env:
             - name: GIT_REVISION
               value: "4a7f652"
@@ -194,4 +194,4 @@ spec:
               emptyDir:
                 medium: "Memory"
           imagePullSecrets:
-            - name: regcred
+            - name: canarytrace-prolabs-pull-secret

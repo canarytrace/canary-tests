@@ -75,7 +75,7 @@ describe('Smoke monitoring on tesla.com', () => {
       })
       let settings = {
         payload: memory, 
-        indexName: 'memory-demo',
+        indexName: 'jsmemory',
       }
       browser.SaveToElastic(settings)
     });

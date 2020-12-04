@@ -1,11 +1,5 @@
 describe('Smoke monitoring on tesla.com', () => {
 
-  before(() => {
-    browser.ActivatePerformanceAudit({
-      networkThrottling: 'online'
-    })
-  })
-
   describe('Buy a MODEL X', () => {
     it('inject hero element measurement', function () {
 
@@ -37,7 +31,6 @@ describe('Smoke monitoring on tesla.com', () => {
       const title = 'Electric Cars, Solar & Clean Energy | Tesla'
       const titleElm = $(`//title[contains(text(),"${title}")]`)
       browser.waitForloadEventEnd()
-      browser.EvaluatePerformanceAudit()
       expect(titleElm.waitForExist({timeoutMsg: "Element title not found. The page couldn't be loaded in time."})).to.be.true
       browser.TakeCoverage('tesla')
     });

@@ -35,6 +35,17 @@ describe('Smoke monitoring on tesla.com', () => {
       browser.TakeCoverage('tesla')
     });
 
+    it('pt audit', () => {
+      // performance audit
+      browser.performAudit('https://www.tesla.com/', process.env.PT_AUDIT_THROTTLING)
+    });
+
+    it('close model dialog with select region', () => {
+      const modalReqion = $('//button[@id="locale-modal-close"]')
+      modalReqion.waitForExist()
+      modalReqion.click()
+    });
+
     it('select and open model X', () => {
       const modelXElm = $('(//a[@href="/modelx"])[1]')
       modelXElm.waitForExist()
@@ -42,6 +53,11 @@ describe('Smoke monitoring on tesla.com', () => {
 
       const titleXElm = $('//title[contains(text(),"Model X | Tesla")]')
       titleXElm.waitForExist()
+    });
+
+    it('pt audit', () => {
+      // performance audit
+      browser.performAudit('https://www.tesla.com/', process.env.PT_AUDIT_THROTTLING)
     });
     
   });

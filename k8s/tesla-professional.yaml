@@ -5,17 +5,45 @@ metadata:
 spec:
   concurrencyPolicy: Replace
   failedJobsHistoryLimit: 2
-  schedule: "*/3 * * * *"
+  schedule: "*/4 * * * *"
   jobTemplate:
     spec:
       template:
         spec:
           containers:
+          - name: selenium
+            image: selenium/standalone-chrome-debug:3.141.59-20200730
+            ports:
+              - containerPort: 5900
+              - containerPort: 4444
+            resources:
+              requests:
+                memory: "1000Mi"
+                cpu: "600m"
+              limits:
+                memory: "1200Mi"
+                cpu: "700m"
+            imagePullPolicy: "IfNotPresent"
+            volumeMounts:
+              - mountPath: "/dev/shm"
+                name: "dshm"
+            livenessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
+            readinessProbe:
+              httpGet:
+                path: /wd/hub
+                port: 4444
+              initialDelaySeconds: 10
+              timeoutSeconds: 5
           - name: canary
-            image: quay.io/canarytrace/professional:2.15.6
+            image: quay.io/canarytrace/professional:3.0.5
             env:
             - name: GIT_REVISION
-              value: "4a7f652"
+              value: "fd29508"
             - name: SPEC
               value: "tesla/smoke.js"
             - name: BASE_URL
@@ -148,34 +176,6 @@ spec:
               - mountPath: /secret
                 name: secret-github
                 readOnly: true
-          - name: selenium
-            image: selenium/standalone-chrome-debug:3.141.59-20200730
-            ports:
-              - containerPort: 5900
-              - containerPort: 4444
-            resources:
-              requests:
-                memory: "1000Mi"
-                cpu: "600m"
-              limits:
-                memory: "1200Mi"
-                cpu: "700m"
-            imagePullPolicy: "IfNotPresent"
-            volumeMounts:
-              - mountPath: "/dev/shm"
-                name: "dshm"
-            livenessProbe:
-              httpGet:
-                path: /wd/hub
-                port: 4444
-              initialDelaySeconds: 10
-              timeoutSeconds: 5
-            readinessProbe:
-              httpGet:
-                path: /wd/hub
-                port: 4444
-              initialDelaySeconds: 10
-              timeoutSeconds: 5
           restartPolicy: "Never"
           volumes:
             - name: secret-github
